@@ -35,11 +35,12 @@ const resolvers = {
 
       return { user };
     },
-    addBook: async (parent, { text, author, title }) => {
+    addBook: async (parent, { userId, authors, description, bookId, image, link, title }) => {
 
       await User.findOneAndUpdate(
-        { username: username },
-        { $addToSet: { books: {_id:ID, text: text, author: author, title: title} } }
+        { _id: userId },
+        { $addToSet: { savedbooks: { authors, description, bookId, image, link, title } } },
+        {new:true}
       );
 
     },
@@ -47,7 +48,7 @@ const resolvers = {
     removeBook: async (parent, { userId, bookId }) => {
       return User.findOneAndUpdate(
         { _id: userId },
-        { $pull: { books: { _id: bookId } } },
+        { $pull: { savedbooks: { _id: bookId } } },
         { new: true }
       );
     },
