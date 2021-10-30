@@ -7,8 +7,10 @@ const resolvers = {
     users: async () => {
       return User.find().populate('savedBooks');
     },
-    user: async (parent, { username }) => {
-      return User.findOne({ username }).populate('savedBooks');
+    me: async (parent, { username }) => {
+      if(context.user){
+      return User.findOne({ _id: context.user._id }).populate('savedBooks');
+      }
     },
   },
 
@@ -16,7 +18,7 @@ const resolvers = {
     addUser: async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password });
       const token = signToken(user);
-      return { user };
+      return { token, user };
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
@@ -33,25 +35,33 @@ const resolvers = {
 
       const token = signToken(user);
 
-      return { user };
+      return {token,  user };
     },
-    addBook: async (parent, { userId, authors, description, bookId, image, link, title }) => {
-
-      await User.findOneAndUpdate(
-        { _id: userId },
+    saveBook: async (parent, { authors, description, bookId, image, link, title }, context) => {
+      if(context.user){
+      return await User.findOneAndUpdate(
+        { _id: context.user._id },
         { $addToSet: { savedbooks: { authors, description, bookId, image, link, title } } },
         {new:true}
       );
+      }
+      throw new AuthenticationError('Please log in to continue!')
 
     },
     
-    removeBook: async (parent, { userId, bookId }) => {
-      return User.findOneAndUpdate(
-        { _id: userId },
-        { $pull: { savedbooks: { _id: bookId } } },
+    removeBook: async (parent, { bookId }, context) => {
+      if(context.user){
+      return await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $pull: { savedbooks: { bookId } } },
         { new: true }
       );
+      }
+      throw new AuthenticationError('Please log in to continue!')
     },
+
+
+    
   },
 };
 
