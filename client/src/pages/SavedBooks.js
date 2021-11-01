@@ -47,7 +47,8 @@ const SavedBooks = () => {
   if (loading) {
     return <h2>LOADING...</h2>;
   }
-
+  console.log(userData);
+  if (userData && userData.savedBooks) {
   return (
     <>
       <Jumbotron fluid className='text-light bg-dark'>
@@ -80,7 +81,7 @@ const SavedBooks = () => {
         </CardColumns>
       </Container>
     </>
-  );
+  );}
 };
 
 export default SavedBooks;
