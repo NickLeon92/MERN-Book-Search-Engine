@@ -16,6 +16,7 @@ const resolvers = {
         console.log(profile)
         return profile
       }
+      throw new AuthenticationError('Not logged in');
     },
   },
 
