@@ -45,10 +45,12 @@ const resolvers = {
     },
     saveBook: async (parent, { authors, description, bookId, image, link, title }, context) => {
       if(context.user){
+        console.log('attempting to save book')
+        console.log(authors, description, bookId, image, link, title)
       return await User.findOneAndUpdate(
         { _id: context.user._id },
-        { $addToSet: { savedbooks: { authors, description, bookId, image, link, title } } },
-        {new:true}
+        { $addToSet: { savedBooks: { authors, description, bookId, image, link, title } } },
+        {new:true, runValidators: true}
       );
       }
       throw new AuthenticationError('Please log in to continue!')
