@@ -11,7 +11,9 @@ import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
+
+  // const userDataLength = Object.keys(userData).length;
 
 
   const { loading,  data } =  useQuery(GET_ME);
@@ -19,9 +21,11 @@ const SavedBooks = () => {
   console.log(data)
   console.log(loading)
 
-  
+  const userData = data?.me
 
-  const [removeBook, {error,responseData}] = useMutation(REMOVE_BOOK)
+  // setUserData(data.me)
+  
+  const [removeBook] = useMutation(REMOVE_BOOK)
 
   
 
@@ -34,14 +38,14 @@ const SavedBooks = () => {
     }
 
     try {
-      const {response} = await removeBook({
+      const {data} = await removeBook({
         variables: {bookId}
       });
 
      
 
-      const updatedUser = response
-      setUserData(updatedUser);
+      // const updatedUser = response
+      // setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
