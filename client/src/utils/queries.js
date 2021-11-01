@@ -8,7 +8,6 @@ export const GET_ME = gql`
             email
             password
             savedBooks {
-                _id
                 authors
                 description
                 bookId
