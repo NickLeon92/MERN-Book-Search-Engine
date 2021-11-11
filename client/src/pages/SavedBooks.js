@@ -31,7 +31,8 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await removeBook({
+      console.log('attempting to delete')
+      const {data} = await removeBook({
         variables: {bookId}
       });
 
